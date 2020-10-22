@@ -1,6 +1,6 @@
     const margin = ({top: 50, right: 140, bottom: 20, left: 140});
     const width = 800 - margin.left - margin.right;
-    const height = 550 - margin.top - margin.bottom;
+    const height = 500 - margin.top - margin.bottom;
     let type = d3.select("#group-by").node().value;
 
     const plot = d3.select('.chart').append('svg')
@@ -30,11 +30,13 @@
 
     plot.append("g")
         .attr("class", "axis x-axis")
+        .attr("color", "#eee3c8")
         .call(xAxis)
         .attr("transform", `translate(0, ${height})`);
     
     plot.append("g")
         .attr("class", "axis y-axis")
+        .attr("color", "#eee3c8")
         .call(yAxis)
 
 
@@ -44,9 +46,10 @@
         .attr('y', -10)
         .attr("font-family", "sans-serif")
         .attr("font-size", "15px")
-        .attr("fill", "#F3F3F3")
+        .attr("fill", "#eee3c8")
         .attr('text-anchor', 'start')
         .text("Stores");
+    
 
     function update(data,type){
         // update domains
@@ -55,15 +58,19 @@
     
         // update bars
         let bars = plot.selectAll('rect')
-            .data(data, d => {return d.company; })
+            .data(data, d => {return d.company; });
+        bars
             .enter()
             .append('rect')
+            .merge(bars)
+            .transition()
+            .duration(1000)
             .attr('class', 'barsGraphed')
             .attr('height',d => (height - yScale(d[type]))) 
             .attr('width', xScale.bandwidth())
             .attr('x', d=>xScale(d.company))
             .attr('y', d=>yScale(d[type])) 
-            .attr('fill', '#FFFFFF');
+            .attr('fill', '#eee3c8');
     
         // update axes and axis title
     
@@ -71,5 +78,11 @@
 
     let data  = d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
         update(data,type); // simply call the update function with the supplied data
+        
+        d3.select('#group-by')
+            .on('change', e => {
+                type = e.target.value;
+                update(data, type);
+            });
 
     });

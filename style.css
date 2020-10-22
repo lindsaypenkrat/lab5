@@ -1,5 +1,22 @@
 body {
-	background-color:black;
-	font-family: 'Roboto', sans-serif;
-	text-align: center;
+	background-color:#2b1d0c;
+    text-align: center;
   }
+h1,h3{
+    color: #eee3c8;
+}
+#group-by{
+    width: 250px;
+}
+
+#sorter{
+    font-family: 'Nunito', sans-serif;
+    background-color:#eee3c8;
+    color:#2b1d0c;
+    outline-color: #eee3c8;
+}
+
+#sorter: hover {
+    background-color:#eee3c8;
+
+}
