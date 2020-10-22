@@ -2,6 +2,7 @@
     const width = 800 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
     let type = d3.select("#group-by").node().value;
+    let sorter = 'ascend';
 
     const plot = d3.select('.chart').append('svg')
         .attr("width", width + margin.left + margin.right)
@@ -51,8 +52,15 @@
         .text("Stores");
     
 
-    function update(data,type){
+    function update(data,type,sorter){
         // update domains
+
+        if (sorter == 'ascend') {
+            data.sort((a, b) => a[type] - b[type]);
+        } else {
+            data.sort((a, b) => b[type] - a[type]);
+        }
+
         xScale.domain(data.map(d=>d.company))
         yScale.domain([0, d3.max(data,d=>d[type])]);
     
@@ -77,12 +85,23 @@
     }
 
     let data  = d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
-        update(data,type); // simply call the update function with the supplied data
+        update(data,type,sorter); // simply call the update function with the supplied data
         
         d3.select('#group-by')
             .on('change', e => {
                 type = e.target.value;
-                update(data, type);
+                update(data, type,sorter);
+            });
+        
+        d3.select('#sorter')
+            .on('click', e => {
+                if (sorter == 'ascend'){
+                    sorter = 'descend';
+                }
+                else {
+                    sorter= 'ascend';
+                }
+                update(data, type, sorter);
             });
 
     });
