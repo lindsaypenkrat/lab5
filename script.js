@@ -3,6 +3,7 @@
     const height = 500 - margin.top - margin.bottom;
     let type = d3.select("#group-by").node().value;
     let sorter = 'ascend';
+    
 
     const plot = d3.select('.chart').append('svg')
         .attr("width", width + margin.left + margin.right)
@@ -29,6 +30,13 @@
         .scale(yScale)
 
 
+    let yUnit = plot.append('text')
+        .attr('alignment-baseline', 'start')
+        .attr("fill", "#eee3c8")
+        .attr('x', -30)
+        .attr('y', -10);
+
+
     plot.append("g")
         .attr("class", "axis x-axis")
         .attr("color", "#eee3c8")
@@ -39,17 +47,6 @@
         .attr("class", "axis y-axis")
         .attr("color", "#eee3c8")
         .call(yAxis)
-
-
-    plot.append("text")
-        .attr("class", "y-axis-title")
-        .attr('x', -60)
-        .attr('y', -10)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "15px")
-        .attr("fill", "#eee3c8")
-        .attr('text-anchor', 'start')
-        .text("Stores");
     
 
     function update(data,type,sorter){
@@ -61,7 +58,7 @@
             data.sort((a, b) => b[type] - a[type]);
         }
 
-        xScale.domain(data.map(d=>d.company))
+        xScale.domain(data.map(d=>d.company));
         yScale.domain([0, d3.max(data,d=>d[type])]);
     
         // update bars
@@ -79,9 +76,21 @@
             .attr('x', d=>xScale(d.company))
             .attr('y', d=>yScale(d[type])) 
             .attr('fill', '#eee3c8');
+        bars
+            .exit()
+            .remove();
     
         // update axes and axis title
-    
+        yUnit
+            .transition()
+            .duration(500)
+            .text(() => {
+                    if (type == 'stores') {
+                        return 'Stores';
+                    } else {
+                        return 'Billion USD';
+                    }
+                })
     }
 
     let data  = d3.csv('coffee-house-chains.csv', d3.autoType).then(data=>{
