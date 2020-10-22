@@ -7,16 +7,17 @@ h1,h3{
 }
 #group-by{
     width: 250px;
+    color:#eee3c8;;
 }
 
 #sorter{
     font-family: 'Nunito', sans-serif;
     background-color:#eee3c8;
     color:#2b1d0c;
-    outline-color: #eee3c8;
+    border: none;
 }
 
 #sorter: hover {
     background-color:#eee3c8;
-
+    border: none;
 }
